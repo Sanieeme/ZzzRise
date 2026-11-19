@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Plan your rest, set a wake-up reminder and understand your sleep habits with ZzzRise.">
+  <title>ZzzRise — Your sleep companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="ZzzRise home"><span aria-hidden="true">☾</span> ZzzRise</a>
+      <div class="account-bar" id="account-bar" hidden>
+        <span id="welcome-user"></span>
+        <button id="logout" class="text-button" type="button">Log out</button>
+      </div>
+    </header>
+
+    <section class="auth-wrap" id="auth-view">
+      <div class="auth-card">
+        <div class="auth-mark" aria-hidden="true">☾</div>
+        <p class="eyebrow">YOUR PERSONAL SLEEP SPACE</p>
+        <h1>Rest well.<br><span>Feel better.</span></h1>
+        <p class="auth-intro">Sign in to save your sleep sessions and see your progress over time.</p>
+        <div class="auth-tabs" role="tablist" aria-label="Account options">
+          <button class="auth-tab active" id="show-login" type="button" role="tab" aria-selected="true">Log in</button>
+          <button class="auth-tab" id="show-register" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <label class="field" id="name-field" hidden><span>Your name</span><input id="name" type="text" autocomplete="name" placeholder="Your name" minlength="2" maxlength="80"></label>
+          <label class="field"><span>Email address</span><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="255"></label>
+          <label class="field"><span>Password</span><input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" maxlength="128" required></label>
+          <button class="primary-button auth-submit" id="auth-submit" type="submit">Log in</button>
+          <p class="auth-error" id="auth-error" role="alert"></p>
+        </form>
+        <p class="privacy-note">Your sleep history is linked to your account.</p>
+      </div>
+    </section>
+
+    <section id="app-view" hidden>
+      <section class="welcome" id="home">
+        <div class="welcome-copy">
+          <p class="eyebrow">A LITTLE MORE REST, A LITTLE MORE YOU</p>
+          <h1>Make room<br><span>for rest.</span></h1>
+          <p>Plan a nap or a full night's sleep. We'll help you keep track of your rest.</p>
+        </div>
+        <div class="countdown-card" aria-live="polite">
+          <span class="countdown-label" id="status">READY WHEN YOU ARE</span>
+          <strong id="countdown">--:--:--</strong>
+          <span class="countdown-caption" id="countdown-caption">TIME UNTIL WAKE-UP</span>
+          <p id="clock-status">Choose a duration or wake-up time to begin.</p>
+        </div>
+      </section>
+
+      <section class="main-grid">
+        <article class="panel routine-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">PLAN YOUR REST</p><h2>When would you like to wake up?</h2></div>
+            <span class="heading-moon" aria-hidden="true">☾</span>
+          </div>
+          <div class="mode-switch" role="tablist" aria-label="Choose how to plan your wake-up">
+            <button id="duration-mode" class="mode-button active" type="button" role="tab" aria-selected="true">Sleep duration</button>
+            <button id="time-mode" class="mode-button" type="button" role="tab" aria-selected="false">Exact wake-up time</button>
+          </div>
+
+          <div id="duration-options" class="plan-mode">
+            <p class="section-label">Choose a quick option</p>
+            <div class="preset-grid" aria-label="Quick sleep durations">
+              <button class="preset" data-hours="1" type="button"><strong>1 hour</strong><small>Quick nap</small></button>
+              <button class="preset" data-hours="3" type="button"><strong>3 hours</strong><small>Short rest</small></button>
+              <button class="preset selected" data-hours="8" type="button"><strong>8 hours</strong><small>Default goal</small></button>
+            </div>
+            <label class="field custom-field" for="hours"><span>Or enter your own duration</span>
+              <div class="number-field"><input id="hours" type="number" min="0.5" max="14" step="0.5" value="8" inputmode="decimal"><span>hours</span></div>
+            </label>
+          </div>
+
+          <div id="time-options" class="plan-mode" hidden>
+            <label class="field" for="wake-time"><span>Set your wake-up time</span><input id="wake-time" type="time" value="07:00"></label>
+            <p class="form-hint">If that time has already passed today, we'll schedule it for tomorrow.</p>
+          </div>
+
+          <div class="plan-preview">
+            <div class="preview-icon" aria-hidden="true">◷</div>
+            <div><small id="preview-label">YOU'LL WAKE UP AT</small><strong id="planned-wake">About 8 hours from now</strong><span id="planned-detail">Your 8-hour sleep goal is selected.</span></div>
+          </div>
+          <p class="form-hint">You can change your plan any time before starting a session.</p>
+        </article>
+
+        <article class="panel session-panel">
+          <div class="panel-heading"><div><p class="eyebrow">YOUR SLEEP SESSION</p><h2 id="session-title">Ready when you are</h2></div><span class="live-status" id="monitor">Not started</span></div>
+          <p class="session-description" id="message">Choose how long you want to rest, then start your session.</p>
+          <div class="session-actions">
+            <button id="start" class="primary-button" type="button">Start sleep session</button>
+            <button id="stop" class="secondary-button" type="button" hidden>End session</button>
+          </div>
+          <p class="alarm-note">For the sound reminder, keep this page open and your device awake. Use your phone's Clock app as a backup.</p>
+        </article>
+      </section>
+
+      <details class="alarm-panel">
+        <summary><span><b>Alarm sound</b><small>Choose and test your wake-up sound</small></span><span class="summary-arrow" aria-hidden="true">⌄</span></summary>
+        <div class="alarm-settings">
+          <label class="field" for="alarm-sound"><span>Sound</span>
+            <select id="alarm-sound"><option value="gentle">Gentle chimes</option><option value="classic">Classic alarm</option><option value="digital">Digital pulse</option></select>
+          </label>
+          <label class="field volume-field" for="alarm-volume"><span>Volume <strong id="volume-value">70%</strong></span>
+            <input id="alarm-volume" type="range" min="10" max="100" step="5" value="70">
+          </label>
+        </div>
+        <div class="alarm-actions">
+          <button id="test-alarm" class="secondary-button" type="button">▶ Test sound</button>
+          <button id="enable-notifications" class="text-button" type="button">Turn on notifications</button>
+        </div>
+        <p class="form-hint">Sound preferences are saved on this device. Browser alarms may not work if the page is closed or your device goes to sleep.</p>
+      </details>
+
+      <section class="panel insights-panel">
+        <div class="panel-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h2>Your sleep insights</h2></div><span class="heading-moon" aria-hidden="true">✧</span></div>
+        <div class="insights">
+          <div class="insight"><span>Sessions completed</span><strong id="session-count">0</strong></div>
+          <div class="insight"><span>Average session</span><strong id="average-sleep">—</strong></div>
+          <div class="insight"><span>Goals reached</span><strong id="goal-rate">—</strong></div>
+          <div class="insight"><span>Sleep this week</span><strong id="weekly-total">—</strong></div>
+        </div>
+        <div class="charts-grid">
+          <article class="chart-card">
+            <div class="chart-heading"><div><h3>Last 7 days</h3><p>Total sleep recorded each day</p></div><span class="chart-unit">HOURS</span></div>
+            <div id="weekly-chart" class="weekly-chart" role="img" aria-label="Bar chart of sleep hours over the last seven days">
+              <p class="chart-empty">Your chart will appear after your first completed session.</p>
+            </div>
+          </article>
+          <article class="chart-card goal-chart-card">
+            <div class="chart-heading"><div><h3>Sleep goal progress</h3><p>Completed sessions that met their goal</p></div></div>
+            <div class="goal-chart-wrap">
+              <div id="goal-donut" class="goal-donut" role="img" aria-label="0 percent of sleep goals reached"><div><strong id="goal-donut-value">—</strong><small>goals met</small></div></div>
+              <div class="goal-legend"><span><i class="legend-dot met"></i>Goal reached</span><span><i class="legend-dot missed"></i>Below goal</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-heading history-heading"><div><p class="eyebrow">YOUR RECENT REST</p><h2>Sleep history</h2></div><span class="session-total"><strong id="history-total">0</strong><small>records</small></span></div>
+        <div id="history" class="history-list"><div class="empty-state"><span>☾</span><strong>Your sleep history will appear here</strong><p>Complete a session to start seeing your progress.</p></div></div>
+      </section>
+      <footer><span>☾ ZzzRise</span><span>Your sleep history is private to your account.</span></footer>
+    </section>
+  </main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

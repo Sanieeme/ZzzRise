@@ -1,0 +1,38 @@
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+from .database import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(80), nullable=False)
+    email = Column(String(255), nullable=False, unique=True, index=True)
+    password_hash = Column(String(255), nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=False)
+    sessions = relationship("SleepSession", back_populates="user")
+
+
+class SleepSession(Base):
+    __tablename__ = "sleep_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    started_at = Column(DateTime(timezone=True), nullable=False, index=True)
+    ended_at = Column(DateTime(timezone=True), nullable=True)
+    target_minutes = Column(Integer, nullable=False, default=480)
+    start_method = Column(String(40), nullable=False, default="manual")
+    status = Column(String(20), nullable=False, default="active")
+    notes = Column(Text, nullable=True)
+    user = relationship("User", back_populates="sessions")
+    events = relationship("SleepEvent", back_populates="session", cascade="all, delete-orphan")
+
+
+class SleepEvent(Base):
+    __tablename__ = "sleep_events"
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(Integer, ForeignKey("sleep_sessions.id"), nullable=True)
+    event_type = Column(String(60), nullable=False)
+    recorded_at = Column(DateTime(timezone=True), nullable=False)
+    value = Column(Float, nullable=True)
+    details = Column(Text, nullable=True)
+    session = relationship("SleepSession", back_populates="events")
