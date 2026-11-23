@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,9 +7,6 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Plan your rest, set a wake-up reminder and understand your sleep habits with ZzzRise.">
   <title>ZzzRise — Your sleep companion</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -27,14 +25,25 @@
         <p class="eyebrow">YOUR PERSONAL SLEEP SPACE</p>
         <h1>Rest well.<br><span>Feel better.</span></h1>
         <p class="auth-intro">Sign in to save your sleep sessions and see your progress over time.</p>
+
         <div class="auth-tabs" role="tablist" aria-label="Account options">
           <button class="auth-tab active" id="show-login" type="button" role="tab" aria-selected="true">Log in</button>
           <button class="auth-tab" id="show-register" type="button" role="tab" aria-selected="false">Create account</button>
         </div>
+
         <form id="auth-form" class="auth-form">
-          <label class="field" id="name-field" hidden><span>Your name</span><input id="name" type="text" autocomplete="name" placeholder="Your name" minlength="2" maxlength="80"></label>
-          <label class="field"><span>Email address</span><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="255"></label>
-          <label class="field"><span>Password</span><input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" maxlength="128" required></label>
+          <label class="field" id="name-field" hidden>
+            <span>Your name</span>
+            <input id="name" type="text" autocomplete="name" placeholder="Your name" minlength="2" maxlength="80">
+          </label>
+          <label class="field">
+            <span>Email address</span>
+            <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="255">
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" maxlength="128" required>
+          </label>
           <button class="primary-button auth-submit" id="auth-submit" type="submit">Log in</button>
           <p class="auth-error" id="auth-error" role="alert"></p>
         </form>
@@ -60,9 +69,13 @@
       <section class="main-grid">
         <article class="panel routine-panel">
           <div class="panel-heading">
-            <div><p class="eyebrow">PLAN YOUR REST</p><h2>When would you like to wake up?</h2></div>
+            <div>
+              <p class="eyebrow">PLAN YOUR REST</p>
+              <h2>When would you like to wake up?</h2>
+            </div>
             <span class="heading-moon" aria-hidden="true">☾</span>
           </div>
+
           <div class="mode-switch" role="tablist" aria-label="Choose how to plan your wake-up">
             <button id="duration-mode" class="mode-button active" type="button" role="tab" aria-selected="true">Sleep duration</button>
             <button id="time-mode" class="mode-button" type="button" role="tab" aria-selected="false">Exact wake-up time</button>
@@ -75,25 +88,43 @@
               <button class="preset" data-hours="3" type="button"><strong>3 hours</strong><small>Short rest</small></button>
               <button class="preset selected" data-hours="8" type="button"><strong>8 hours</strong><small>Default goal</small></button>
             </div>
-            <label class="field custom-field" for="hours"><span>Or enter your own duration</span>
-              <div class="number-field"><input id="hours" type="number" min="0.5" max="14" step="0.5" value="8" inputmode="decimal"><span>hours</span></div>
+            <label class="field custom-field" for="hours">
+              <span>Or enter your own duration</span>
+              <div class="number-field">
+                <input id="hours" type="number" min="0.5" max="14" step="0.5" value="8" inputmode="decimal">
+                <span>hours</span>
+              </div>
             </label>
           </div>
 
           <div id="time-options" class="plan-mode" hidden>
-            <label class="field" for="wake-time"><span>Set your wake-up time</span><input id="wake-time" type="time" value="07:00"></label>
+            <label class="field" for="wake-time">
+              <span>Set your wake-up time</span>
+              <input id="wake-time" type="time" value="07:00">
+            </label>
             <p class="form-hint">If that time has already passed today, we'll schedule it for tomorrow.</p>
+            <p class="bedtime-tip" id="bedtime-suggestion">For an 8-hour sleep target, aim to be asleep by 23:00.</p>
           </div>
 
           <div class="plan-preview">
             <div class="preview-icon" aria-hidden="true">◷</div>
-            <div><small id="preview-label">YOU'LL WAKE UP AT</small><strong id="planned-wake">About 8 hours from now</strong><span id="planned-detail">Your 8-hour sleep goal is selected.</span></div>
+            <div>
+              <small id="preview-label">YOU'LL WAKE UP AT</small>
+              <strong id="planned-wake">About 8 hours from now</strong>
+              <span id="planned-detail">Your 8-hour sleep goal is selected.</span>
+            </div>
           </div>
           <p class="form-hint">You can change your plan any time before starting a session.</p>
         </article>
 
         <article class="panel session-panel">
-          <div class="panel-heading"><div><p class="eyebrow">YOUR SLEEP SESSION</p><h2 id="session-title">Ready when you are</h2></div><span class="live-status" id="monitor">Not started</span></div>
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">YOUR SLEEP SESSION</p>
+              <h2 id="session-title">Ready when you are</h2>
+            </div>
+            <span class="live-status" id="monitor">Not started</span>
+          </div>
           <p class="session-description" id="message">Choose how long you want to rest, then start your session.</p>
           <div class="session-actions">
             <button id="start" class="primary-button" type="button">Start sleep session</button>
@@ -104,12 +135,21 @@
       </section>
 
       <details class="alarm-panel">
-        <summary><span><b>Alarm sound</b><small>Choose and test your wake-up sound</small></span><span class="summary-arrow" aria-hidden="true">⌄</span></summary>
+        <summary>
+          <span><b>Alarm sound</b><small>Choose and test your wake-up sound</small></span>
+          <span class="summary-arrow" aria-hidden="true">⌄</span>
+        </summary>
         <div class="alarm-settings">
-          <label class="field" for="alarm-sound"><span>Sound</span>
-            <select id="alarm-sound"><option value="gentle">Gentle chimes</option><option value="classic">Classic alarm</option><option value="digital">Digital pulse</option></select>
+          <label class="field" for="alarm-sound">
+            <span>Sound</span>
+            <select id="alarm-sound">
+              <option value="gentle">Gentle chimes</option>
+              <option value="classic">Classic alarm</option>
+              <option value="digital">Digital pulse</option>
+            </select>
           </label>
-          <label class="field volume-field" for="alarm-volume"><span>Volume <strong id="volume-value">70%</strong></span>
+          <label class="field volume-field" for="alarm-volume">
+            <span>Volume <strong id="volume-value">70%</strong></span>
             <input id="alarm-volume" type="range" min="10" max="100" step="5" value="70">
           </label>
         </div>
@@ -120,38 +160,257 @@
         <p class="form-hint">Sound preferences are saved on this device. Browser alarms may not work if the page is closed or your device goes to sleep.</p>
       </details>
 
-      <section class="panel insights-panel">
-        <div class="panel-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h2>Your sleep insights</h2></div><span class="heading-moon" aria-hidden="true">✧</span></div>
+      <section class="panel insights-panel" id="insights-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">YOUR PROGRESS</p>
+            <h2>Your sleep insights</h2>
+          </div>
+          <span class="heading-moon" aria-hidden="true">✧</span>
+        </div>
+
         <div class="insights">
           <div class="insight"><span>Sessions completed</span><strong id="session-count">0</strong></div>
           <div class="insight"><span>Average session</span><strong id="average-sleep">—</strong></div>
           <div class="insight"><span>Goals reached</span><strong id="goal-rate">—</strong></div>
           <div class="insight"><span>Sleep this week</span><strong id="weekly-total">—</strong></div>
         </div>
+
         <div class="charts-grid">
           <article class="chart-card">
-            <div class="chart-heading"><div><h3>Last 7 days</h3><p>Total sleep recorded each day</p></div><span class="chart-unit">HOURS</span></div>
+            <div class="chart-heading">
+              <div>
+                <h3 id="sleep-chart-title">Last 7 days</h3>
+                <p id="sleep-chart-subtitle">Total sleep recorded each day</p>
+              </div>
+              <span class="chart-unit">HOURS</span>
+            </div>
+            <div class="chart-controls" role="group" aria-label="Chart date range">
+              <button type="button" class="chart-range active" data-range="7">7 days</button>
+              <button type="button" class="chart-range" data-range="30">30 days</button>
+            </div>
             <div id="weekly-chart" class="weekly-chart" role="img" aria-label="Bar chart of sleep hours over the last seven days">
               <p class="chart-empty">Your chart will appear after your first completed session.</p>
             </div>
           </article>
+
           <article class="chart-card goal-chart-card">
-            <div class="chart-heading"><div><h3>Sleep goal progress</h3><p>Completed sessions that met their goal</p></div></div>
+            <div class="chart-heading">
+              <div>
+                <h3>Sleep goal progress</h3>
+                <p>Completed sessions that met their goal</p>
+              </div>
+            </div>
             <div class="goal-chart-wrap">
-              <div id="goal-donut" class="goal-donut" role="img" aria-label="0 percent of sleep goals reached"><div><strong id="goal-donut-value">—</strong><small>goals met</small></div></div>
-              <div class="goal-legend"><span><i class="legend-dot met"></i>Goal reached</span><span><i class="legend-dot missed"></i>Below goal</span></div>
+              <div id="goal-donut" class="goal-donut" role="img" aria-label="0 percent of sleep goals reached">
+                <div><strong id="goal-donut-value">—</strong><small>goals met</small></div>
+              </div>
+              <div class="goal-legend">
+                <span><i class="legend-dot met"></i>Goal reached</span>
+                <span><i class="legend-dot missed"></i>Below goal</span>
+              </div>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="panel history-panel">
-        <div class="panel-heading history-heading"><div><p class="eyebrow">YOUR RECENT REST</p><h2>Sleep history</h2></div><span class="session-total"><strong id="history-total">0</strong><small>records</small></span></div>
-        <div id="history" class="history-list"><div class="empty-state"><span>☾</span><strong>Your sleep history will appear here</strong><p>Complete a session to start seeing your progress.</p></div></div>
+      <section class="feature-grid">
+        <article class="panel score-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">YOUR REST SNAPSHOT</p><h2>Sleep score</h2></div>
+            <span class="heading-moon" aria-hidden="true">✦</span>
+          </div>
+          <div class="score-layout">
+            <div class="score-ring" id="sleep-score-ring">
+              <strong id="sleep-score">—</strong><small>/ 100</small>
+            </div>
+            <div class="score-copy">
+              <strong id="score-caption">Your score will appear here</strong>
+              <p id="score-note">Record a few completed sessions to build your snapshot.</p>
+              <div class="streak-chip">🔥 <strong id="streak-days">0</strong> day streak</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel journal-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">A MOMENT FOR YOU</p><h2>Sleep journal</h2></div>
+            <span class="heading-moon" aria-hidden="true">✎</span>
+          </div>
+          <form id="journal-form" class="journal-form">
+            <label class="field">
+              <span>How are you feeling?</span>
+              <select id="journal-mood" required>
+                <option value="Rested">😊 Rested</option>
+                <option value="Okay">🙂 Okay</option>
+                <option value="Tired">😴 Tired</option>
+                <option value="Stressed">😟 Stressed</option>
+                <option value="Low">😔 Low</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Anything you'd like to note? (optional)</span>
+              <textarea id="journal-notes" rows="2" maxlength="1000" placeholder="How did your night feel?"></textarea>
+            </label>
+            <button class="secondary-button" type="submit">Save journal entry</button>
+          </form>
+          <div id="journal-list" class="journal-list">
+            <p class="form-hint">Your recent reflections will appear here.</p>
+          </div>
+        </article>
       </section>
-      <footer><span>☾ ZzzRise</span><span>Your sleep history is private to your account.</span></footer>
+
+      <section class="panel android-panel" id="android-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">ANDROID CONNECTION</p><h2>Sync sleep from Samsung Health</h2></div>
+          <span class="coach-spark">HEALTH CONNECT</span>
+        </div>
+        <p class="coach-intro">Use the ZzzRise Android companion to securely read sleep sessions that Samsung Health shares with Android Health Connect. Sign in with your ZzzRise account, grant sleep-data permission, then sync. Your imported sessions will appear in your history and insights.</p>
+
+        <div class="android-steps">
+          <div><strong>1</strong><span><b>Set up Health Connect</b><small>Make sure Samsung Health is syncing sleep data to Health Connect.</small></span></div>
+          <div><strong>2</strong><span><b>Sign in to the companion</b><small>Use your ZzzRise email and password. Your Samsung account is not used to sign in to ZzzRise.</small></span></div>
+          <div><strong>3</strong><span><b>Allow sleep access and sync</b><small>Choose to share sleep sessions. You can revoke access in Android settings.</small></span></div>
+        </div>
+
+        <div class="pairing-area">
+          <div class="pairing-copy">
+            <h3>Connect with a QR code</h3>
+            <p>Enter your ZzzRise server address in the Android companion first (use your computer's local network address or your deployed HTTPS address). Then open ZzzRise Sync and tap <b>Sign in with QR code</b>. The code expires after five minutes and can only be used once.</p>
+            <button id="generate-pairing" class="primary-button" type="button">Generate pairing QR code</button>
+            <p id="pairing-expiry" class="form-hint" aria-live="polite">Your QR code will appear here.</p>
+          </div>
+          <div class="pairing-qr" id="pairing-qr-wrap" hidden>
+            <img id="pairing-qr" alt="Temporary ZzzRise phone pairing QR code">
+            <small>Scan inside the ZzzRise Sync Android app</small>
+          </div>
+        </div>
+
+        <p id="health-connect-status" class="form-hint">No Android sleep sessions have been imported yet. The companion app is in the Android companion folder of this project.</p>
+        <p class="form-hint">Health Connect imports completed sleep sessions after Samsung Health has synced them. It does not infer sleep from a stationary phone, and sync may be delayed.</p>
+      </section>
+
+      <section class="panel monthly-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">YOUR LAST 30 DAYS</p><h2>Monthly snapshot</h2></div>
+          <span class="heading-moon" aria-hidden="true">◷</span>
+        </div>
+        <div class="monthly-stats">
+          <div><small>Total sleep recorded</small><strong id="monthly-sleep">—</strong></div>
+          <div><small>Sessions logged</small><strong id="monthly-sessions">0</strong></div>
+          <div><small>Average goal success</small><strong id="monthly-goal-rate">—</strong></div>
+        </div>
+      </section>
+
+      <section class="panel coach-panel" id="coach-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">A LITTLE GUIDANCE</p><h2>Meet your AI Sleep Coach</h2></div>
+          <span class="coach-spark">✧ LOCAL AI</span>
+        </div>
+        <p class="coach-intro">Ask about your sleep habits. To answer, ZzzRise sends a limited sample of your latest 30 completed sleep records and up to 7 recent journal entries to your configured Ollama service. By default, Ollama runs on this same computer; no hosted AI API key is required.</p>
+
+        <div class="coach-prompts">
+          <button type="button" class="prompt-chip" data-question="How has my sleep been this week?">How was my week?</button>
+          <button type="button" class="prompt-chip" data-question="What patterns can you see in my recent sleep records?">Spot my patterns</button>
+          <button type="button" class="prompt-chip" data-question="Suggest a realistic bedtime routine for me based on my sleep history.">Suggest a routine</button>
+          <button type="button" class="prompt-chip" data-question="What habits could help me fall asleep more easily and reduce common sleep disruptors? Please do not diagnose me.">Help me wind down</button>
+        </div>
+
+        <form id="coach-form" class="coach-form">
+          <label class="field" for="coach-question">
+            <span>Your question</span>
+            <textarea id="coach-question" rows="2" maxlength="500" placeholder="For example: How can I make my sleep schedule more consistent?" required></textarea>
+          </label>
+          <button class="primary-button" id="coach-submit" type="submit">Ask my Sleep Coach ✨</button>
+        </form>
+        <div id="coach-answer" class="coach-answer" aria-live="polite" hidden></div>
+        <p class="form-hint">General wellbeing information only, not medical advice. AI requests are sent to your configured Ollama service; with the default settings, that is this computer.</p>
+      </section>
+
+      <section class="panel history-panel" id="history-panel">
+        <div class="panel-heading history-heading">
+          <div><p class="eyebrow">YOUR RECENT REST</p><h2>Sleep history</h2></div>
+          <span class="session-total"><strong id="history-total">0</strong><small>records</small></span>
+        </div>
+        <div id="history" class="history-list">
+          <div class="empty-state">
+            <span>☾</span>
+            <strong>Your sleep history will appear here</strong>
+            <p>Complete a session to start seeing your progress.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel analytics-section" id="sleep-analytics" aria-labelledby="analytics-title">
+        <div class="analytics-header">
+          <div>
+            <p class="eyebrow">DETAILED PROGRESS</p>
+            <h2 id="analytics-title">Sleep analytics</h2>
+            <p>Understand your sleep patterns over time.</p>
+          </div>
+          <label class="field" for="analytics-period">
+            <span>Time period</span>
+            <select id="analytics-period">
+              <option value="7">Last 7 days</option>
+              <option value="30">Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="insights analytics-summary" aria-live="polite">
+          <article class="insight analytics-card">
+            <h3>Total sleep</h3>
+            <p id="total-sleep">—</p>
+          </article>
+          <article class="insight analytics-card">
+            <h3>Average per session</h3>
+            <p id="analytics-average-sleep">—</p>
+          </article>
+          <article class="insight analytics-card">
+            <h3>Completed sessions</h3>
+            <p id="analytics-session-count">—</p>
+          </article>
+          <article class="insight analytics-card">
+            <h3>Goal achievement</h3>
+            <p id="goal-achievement">—</p>
+          </article>
+        </div>
+
+        <div class="charts-grid analytics-grid">
+          <article class="chart-card analytics-chart">
+            <h3>Sleep duration by day</h3>
+            <div id="sleep-duration-chart" class="weekly-chart analytics-bars" role="img" aria-label="Daily sleep duration chart">
+              <p class="analytics-empty">Your chart will appear when completed sessions are available.</p>
+            </div>
+          </article>
+
+          <article class="chart-card analytics-chart">
+            <h3>Bedtime trends</h3>
+            <div id="bedtime-chart" class="bedtime-list">
+              <p class="analytics-empty">Bedtime trends will appear here.</p>
+            </div>
+          </article>
+
+          <article class="chart-card analytics-chart">
+            <h3>Sleep goal achievement</h3>
+            <div id="sleep-goal-chart" class="goal-visual" role="img" aria-label="Sleep goal achievement">
+              <span id="analytics-goal-value">—</span>
+            </div>
+            <p id="analytics-goal-detail" class="analytics-empty analytics-goal-detail">No completed sessions yet.</p>
+          </article>
+        </div>
+
+        <p id="analytics-message" class="form-hint" role="status" aria-live="polite"></p>
+      </section>
+
+      <footer>
+        <span>☾ ZzzRise</span>
+        <span>Your sleep history is private to your account.</span>
+      </footer>
     </section>
   </main>
+
   <div id="toast" role="status" aria-live="polite"></div>
   <script src="/static/app.js" defer></script>
 </body>

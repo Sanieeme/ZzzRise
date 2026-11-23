@@ -9,7 +9,12 @@ def extract_sessions():
     url = os.getenv("DATABASE_URL", "sqlite:///./zzrise.db")
     options = {"check_same_thread": False} if url.startswith("sqlite") else {}
     engine = create_engine(url, connect_args=options)
-    query = text("SELECT id, started_at, ended_at, target_minutes, start_method, status FROM sleep_sessions")
+    query = text("""
+        SELECT id, started_at, ended_at, target_minutes, start_method, status
+        FROM sleep_sessions
+        WHERE status = 'completed' AND ended_at IS NOT NULL
+        ORDER BY started_at
+    """)
     try:
         with engine.connect() as conn:
             return pd.read_sql(query, conn)

@@ -59,3 +59,38 @@ class EventCreate(BaseModel):
     recorded_at: datetime
     value: Optional[float] = None
     details: Optional[str] = None
+
+
+class JournalCreate(BaseModel):
+    entry_date: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    mood: str = Field(min_length=2, max_length=30)
+    notes: Optional[str] = Field(default=None, max_length=1000)
+
+
+class JournalRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    entry_date: str
+    mood: str
+    notes: Optional[str]
+    created_at: datetime
+
+
+class CoachQuestion(BaseModel):
+    question: str = Field(min_length=3, max_length=500)
+
+
+class MobileLoginInput(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=128)
+
+
+class HealthConnectSleepRecord(BaseModel):
+    record_id: str = Field(min_length=1, max_length=255)
+    start_time: datetime
+    end_time: datetime
+    source_app: Optional[str] = Field(default=None, max_length=255)
+
+
+class HealthConnectSyncInput(BaseModel):
+    records: list[HealthConnectSleepRecord] = Field(max_length=100)

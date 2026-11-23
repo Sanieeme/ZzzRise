@@ -67,13 +67,31 @@ The ETL pipeline is part of the project code and is intentionally not shown in t
 3. **Load:** `pipeline/load.py` writes processed CSV files and analytics tables to `warehouse/zzrise_analytics.db`.
 4. **Orchestrate:** `pipeline/run_pipeline.py` runs Extract → Transform → Load.
 
-Run it manually for development after collecting completed sessions:
+The pipeline processes **completed** sleep sessions only. It is batch processing: it processes stored records when the ETL job runs. It is not stream processing.
+
+### Automatic nightly processing on macOS
+
+From the project root, after creating `.venv` and installing `requirements.txt`, run:
 
 ```bash
-python -m pipeline.run_pipeline
+./scripts/install_macos_scheduler.sh
 ```
 
-The pipeline is batch processing: it processes stored session records when the ETL job is run. It is not stream processing. For a multi-user production service, add per-user access controls or anonymised aggregate reporting before making warehouse outputs available to analysts.
+This installs a per-user macOS `launchd` job that runs the ETL every day at **00:00 local Mac time**. The installer also triggers one run immediately so you can verify it. The job runs independently of the ZzzRise web server, but the Mac must be powered on and awake at the scheduled time. If the Mac is asleep or off at midnight, that occurrence may be skipped; this is not a cloud scheduler.
+
+Logs are written to `logs/etl.log` and `logs/etl-error.log`. To run the pipeline manually, use:
+
+```bash
+./scripts/run_etl_now.sh
+```
+
+To remove the automatic schedule:
+
+```bash
+./scripts/uninstall_macos_scheduler.sh
+```
+
+For a multi-user production service, add per-user access controls or anonymised aggregate reporting before making warehouse outputs available to analysts.
 
 ## Tests
 
@@ -94,3 +112,103 @@ ZzzRise/
 ├── requirements.txt
 └── .env.example
 ```
+
+
+## Local AI Sleep Coach (no paid API key)
+
+The AI Sleep Coach uses **Ollama**, a local model runtime. ZzzRise does not require an OpenAI, Groq or other hosted AI API key, and there are no per-question API charges. The model is downloaded to the computer running Ollama. The model and software are available without a per-request fee, but this is not a guarantee that all future versions or hardware costs will remain free forever.
+
+### Install and run the local AI
+
+1. Install Ollama from <https://ollama.com/download>.
+2. Start Ollama.
+3. Download the default model:
+
+   ```bash
+   ollama pull qwen2.5:3b
+   ```
+
+4. Copy `.env.example` to `.env` and keep the defaults, or set `OLLAMA_MODEL` to another model you have downloaded.
+5. Start ZzzRise:
+
+   ```bash
+   uvicorn backend.main:app --reload
+   ```
+
+By default, ZzzRise only allows the Ollama address `http://127.0.0.1:11434`. This keeps AI prompts on the same computer. A remote Ollama server is blocked unless the owner deliberately sets `OLLAMA_ALLOW_REMOTE=true`; only do this for a server you trust and protect with network controls. The model receives only the signed-in user's latest 30 completed sleep records and up to 7 recent journal entries, with no account email or name.
+
+### AI safety and limitations
+
+The coach provides general sleep-wellbeing information. It must not diagnose insomnia or another condition, prescribe medication or supplements, or claim to prevent or cure a condition. If sleep difficulties persist, affect daily functioning, or include concerning symptoms such as breathing pauses or dangerous daytime sleepiness, the coach should encourage the user to speak with a qualified healthcare professional. The AI can make mistakes; treat suggestions as general information, not medical advice.
+
+### Privacy notes
+
+- Sleep records, journal entries and account data are stored in the configured ZzzRise database.
+- With the default local Ollama configuration, the AI prompt is sent to the Ollama process on the same computer, not to OpenAI or Groq.
+- This does not automatically encrypt the SQLite database or backups. Enable full-disk encryption (FileVault on macOS), protect backups, and secure the computer account.
+- Do not expose Ollama's port or the development ZzzRise server to the public internet.
+- If you use a remote Ollama host, that host can access the prompt and its logs; only use infrastructure you control and trust.
+
+## Android and Samsung Health connection (Health Connect)
+
+The project includes an **Android companion app** in `android-companion/`. A browser-only web app cannot directly read Android Health Connect data. The companion app acts as the permissioned Android bridge:
+
+1. Samsung Health shares supported sleep records with Android Health Connect on supported devices and app versions.
+2. The user signs in to the companion using their **ZzzRise account** (not their Samsung account password).
+3. The user grants Health Connect permission to read sleep sessions.
+4. The user taps Sync. The companion reads up to the last 90 days and sends record ID, start/end times and source package to the authenticated ZzzRise account.
+5. The backend imports sessions as completed records and prevents duplicate imports for the same user and Health Connect record ID.
+
+### Build the Android companion
+
+Open `android-companion/` in Android Studio, allow Gradle sync, connect a compatible Android phone with Health Connect available, and run the `app` configuration. The source uses Health Connect's `SleepSessionRecord` read permission. The companion is a starter integration and must be built and tested on a real device. For public distribution, complete the required Play Console health-data declarations and policy review.
+
+For local phone testing, the phone and Mac must be on the same Wi-Fi and the app must use your Mac's LAN IP and port `8000` instead of `127.0.0.1`. Use HTTPS in a deployed environment. The current companion syncs when the user opens it and taps Sync; automatic background syncing is not implemented yet.
+
+### Important behaviour and limits
+
+- A stationary phone does **not** prove that someone is asleep. ZzzRise imports completed sleep sessions from Health Connect instead of guessing.
+- Health Connect only has records that a supported source app has written or synced. Missing records do not prove that the user was awake.
+- The web countdown is a planned wake-up timer. Browser alarms are not guaranteed if the browser is closed, suspended or the phone is asleep; keep a separate Clock alarm as backup.
+- The companion authenticates with a short-lived ZzzRise bearer token. It does not send Samsung credentials to ZzzRise.
+
+## Data engineering pipeline
+
+The ETL workflow is intentionally kept out of the ordinary user interface:
+
+1. **Extract:** `pipeline/extract.py` reads completed sessions from the operational database. It does not extract names, email addresses or passwords.
+2. **Transform:** `pipeline/transform.py` uses Pandas to validate timestamps, calculate session duration, check target achievement and create daily summaries.
+3. **Load:** `pipeline/load.py` writes processed CSV files and analytics tables to `warehouse/zzrise_analytics.db`.
+4. **Orchestrate:** `pipeline/run_pipeline.py` runs Extract → Transform → Load.
+
+Run manually with `./scripts/run_etl_now.sh`. To install the macOS nightly scheduler at midnight local time, run `./scripts/install_macos_scheduler.sh`. The Mac must be powered on and awake; this is not a cloud scheduler. Remove it with `./scripts/uninstall_macos_scheduler.sh`.
+
+## Tests
+
+```bash
+python -m pytest -q
+```
+
+## Project structure
+
+```text
+ZzzRise/
+├── backend/             # FastAPI API, authentication, database models and local AI
+│   └── ai/               # Ollama coach client
+├── frontend/             # Sleep dashboard, alarm, history, journal and coach
+├── android-companion/    # Android Health Connect sync app
+├── pipeline/             # Batch ETL: extract, transform and load
+├── warehouse/            # Analytics schema and output database
+├── data/                 # Raw and processed ETL files
+├── scripts/              # ETL and macOS scheduler scripts
+├── tests/                # API, authentication and feature tests
+├── requirements.txt
+└── .env.example
+```
+
+
+## QR phone pairing and dashboard navigation
+
+The dashboard includes a short-lived QR pairing flow under **Connect phone**. While signed in on the web, generate a QR code, then open the Android companion, enter the same ZzzRise server URL, and choose **Sign in with QR code**. The code expires after five minutes and is single-use. The Android app receives a short-lived mobile access token; it does not contain the user's password. Email/password sign-in remains available as a fallback.
+
+The dashboard also includes sticky quick navigation and 7-day / 30-day sleep chart ranges. QR pairing requires the `qrcode[pil]` Python dependency and the Android companion's ZXing camera scanner dependency.

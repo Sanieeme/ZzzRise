@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -36,3 +36,33 @@ class SleepEvent(Base):
     value = Column(Float, nullable=True)
     details = Column(Text, nullable=True)
     session = relationship("SleepSession", back_populates="events")
+
+
+class SleepJournal(Base):
+    __tablename__ = "sleep_journal"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    entry_date = Column(String(10), nullable=False, index=True)
+    mood = Column(String(30), nullable=False)
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False)
+
+
+class HealthConnectImport(Base):
+    __tablename__ = "health_connect_imports"
+    __table_args__ = (UniqueConstraint("user_id", "record_id", name="uq_health_import_user_record"),)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    record_id = Column(String(255), nullable=False)
+    source_app = Column(String(255), nullable=True)
+    session_id = Column(Integer, ForeignKey("sleep_sessions.id"), nullable=False)
+    imported_at = Column(DateTime(timezone=True), nullable=False)
+
+
+class MobilePairingToken(Base):
+    __tablename__ = "mobile_pairing_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    token_hash = Column(String(64), nullable=False, unique=True, index=True)
+    expires_at = Column(DateTime(timezone=True), nullable=False, index=True)
+    used_at = Column(DateTime(timezone=True), nullable=True)
